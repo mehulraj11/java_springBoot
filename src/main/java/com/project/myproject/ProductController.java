@@ -13,6 +13,11 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @PostMapping
+    public Product createProduct(@RequestBody Product product) {
+        return productRepository.save(product);
+    }
+
     @GetMapping
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -21,11 +26,6 @@ public class ProductController {
     @GetMapping("/{id}")
     public Optional<Product> getProductById(@PathVariable Long id) {
         return productRepository.findById(id);
-    }
-
-    @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productRepository.save(product);
     }
 
     @PutMapping("/{id}")

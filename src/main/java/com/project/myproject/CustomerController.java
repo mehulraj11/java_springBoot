@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +20,11 @@ public class CustomerController {
     public ResponseEntity<String> createCustomer(@RequestBody Customer customer) {
         customerRepository.save(customer);
         return ResponseEntity.ok("Customer created successfully");
+    }
+
+    @GetMapping
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
     }
 
     // Get Customer by ID

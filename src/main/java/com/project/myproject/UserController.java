@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")  // Base URL path for all methods
+@RequestMapping("/api/users")  // Base URL path for all methods
 public class UserController {
 
     @Autowired
@@ -20,6 +21,11 @@ public class UserController {
         return ResponseEntity.ok("User created successfully");
     }
 
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
     // GET: Read a user by ID
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
@@ -30,6 +36,7 @@ public class UserController {
             throw new RuntimeException("User not found with id " + id);
         }
     }
+
 
     // PUT: Update an existing user
     @PutMapping("/{id}")
