@@ -8,18 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/customer")
 public class CustomerController {
 
     @Autowired
     private CustomerRepository customerRepository;
 
-
-    // Create a Customer
     @PostMapping
-    public ResponseEntity<String> createCustomer(@RequestBody Customer customer) {
-        customerRepository.save(customer);
-        return ResponseEntity.ok("Customer created successfully");
+    public Customer createCustomer(@RequestBody Customer customer) {
+        return customerRepository.save(customer);
     }
 
     @GetMapping
@@ -27,32 +24,23 @@ public class CustomerController {
         return customerRepository.findAll();
     }
 
-    // Get Customer by ID
     @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable Long id) {
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id " + id));
+    public Optional<Customer> getCustomerById(@PathVariable Long id) {
+        return customerRepository.findById(id);
     }
 
-
-    // Update Customer
     @PutMapping("/{id}")
-    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer customerDetails) {
-        Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id " + id));
-
-        existingCustomer.setName(customerDetails.getName());
-        existingCustomer.setEmail(customerDetails.getEmail());
-        return customerRepository.save(existingCustomer);
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody Customer updatedCustomer) {
+        return customerRepository.findById(id).map(customer -> {
+            customer.setEmail(updatedCustomer.getEmail());
+            customer.setName(updatedCustomer.getName());
+            Customer saved = customerRepository.save(customer);
+            return ResponseEntity.ok(saved);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
-    // Delete Customer
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id " + id));
-
-        customerRepository.delete(customer);
-        return ResponseEntity.ok("Customer deleted successfully");
+    public void deleteCustomer(@PathVariable Long id) {
+        customerRepository.deleteById(id);
     }
 }

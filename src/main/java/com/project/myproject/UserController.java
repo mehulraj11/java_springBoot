@@ -8,17 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")  // Base URL path for all methods
-public class UserController {
+@RequestMapping("/api/users")
 
+public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // POST: Save a new user
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user) {
-        userRepository.save(user);
-        return ResponseEntity.ok("User created successfully");
+    public User createUser(@RequestBody User user) {
+        return userRepository.save(user);
     }
 
     @GetMapping
@@ -26,41 +24,25 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    // GET: Read a user by ID
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            throw new RuntimeException("User not found with id " + id);
-        }
+    public Optional<User> getUser(@PathVariable Long id) {
+        return userRepository.findById(id);
     }
 
-
-    // PUT: Update an existing user
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User existingUser = optionalUser.get();
-            existingUser.setName(userDetails.getName());
-            existingUser.setEmail(userDetails.getEmail());
-            return userRepository.save(existingUser);
-        } else {
-            throw new RuntimeException("User not found with id " + id);
-        }
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        return userRepository.findById(id).map(user -> {
+            user.setEmail(updatedUser.getEmail());
+            user.setName(updatedUser.getName());
+            user.setPassword(updatedUser.getPassword());
+            User saved = userRepository.save(user);
+            return ResponseEntity.ok(saved);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE: Delete a user by ID
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.deleteById(id);
-            return "User with id " + id + " has been deleted";
-        } else {
-            throw new RuntimeException("User not found with id " + id);
-        }
+    public void deleteUser(@PathVariable Long id) {
+        userRepository.deleteById(id);
     }
+
 }
