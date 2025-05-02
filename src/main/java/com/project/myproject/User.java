@@ -1,5 +1,6 @@
 package com.project.myproject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -8,9 +9,11 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment id
+    @JsonIgnore
     private Long id;
     private String name;
     private String email;
+    @JsonIgnore
     private String password;
 
     // Constructors

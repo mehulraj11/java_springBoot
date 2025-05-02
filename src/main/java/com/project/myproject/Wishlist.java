@@ -1,9 +1,6 @@
 package com.project.myproject;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Wishlist {
@@ -11,35 +8,31 @@ public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
+    private User user;
+    @ManyToOne// Reference to User
+    private Product product; // Reference to Product
 
-    private Long userId;    // Reference to User
-    private Long productId; // Reference to Product
-
-    public Wishlist() {
+    public Wishlist(){}
+    public Wishlist(User user, Product product) {
+        this.user = user;
+        this.product = product;
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public User getUser() {
+        return user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }
