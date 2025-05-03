@@ -1,10 +1,12 @@
 package com.project.myproject;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +27,11 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(UserDTO::new) // assuming you have a constructor UserDTO(User user)
+                .toList(); // or .collect(Collectors.toList()) in older Java versions
     }
 
     @GetMapping("/{id}")
@@ -39,6 +44,21 @@ public class UserController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User loginRequest) {
+        Optional<User> userOptional = userRepository.findAll().stream()
+                .filter(u -> u.getEmail().equals(loginRequest.getEmail()))
+                .findFirst();
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                String token = JwtUtil.generateToken(user.getEmail());
+                return ResponseEntity.ok(Collections.singletonMap("token", token));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {

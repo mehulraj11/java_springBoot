@@ -13,7 +13,6 @@ public class User {
     private Long id;
     private String name;
     private String email;
-    @JsonIgnore
     private String password;
 
     // Constructors
