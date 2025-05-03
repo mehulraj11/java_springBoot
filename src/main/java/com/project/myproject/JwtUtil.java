@@ -3,7 +3,6 @@ package com.project.myproject;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import org.springframework.boot.web.client.RootUriBuilderFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

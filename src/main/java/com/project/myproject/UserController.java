@@ -30,8 +30,8 @@ public class UserController {
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(UserDTO::new) // assuming you have a constructor UserDTO(User user)
-                .toList(); // or .collect(Collectors.toList()) in older Java versions
+                .map(UserDTO::new)
+                .toList();
     }
 
     @GetMapping("/{id}")

@@ -33,10 +33,16 @@ public class SecurityConfig {
                                 "/api/users",
                                 "/api/products",
                                 "/api/customer",
-                                "/api/wishlist"// allow user registration
+                                "/api/wishlist",
+                                "/api/users/{id}",// allow user registration
+                                "/api/products/{id}",// allow user registration
+                                "/api/customer/{id}",// allow user registration
+                                "/api/wishlist/{id}"// allow user registration
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore((Filter) jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.project.myproject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -7,6 +8,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     private String name;
@@ -17,10 +19,10 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
+//    public Customer(String name, String email) {
+//        this.name = name;
+//        this.email = email;
+//    }
 
     // Getters and Setters
     public Long getId() {
